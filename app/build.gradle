@@ -1,0 +1,89 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply plugin: 'com.neenbedankt.android-apt'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "com.mikemccartney.twitterclient"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile("com.twitter.sdk.android:twitter:1.9.1@aar") {
+        transitive = true;
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
+
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true;
+    }
+
+    //      Dagger 2 - dependency injection
+    compile 'com.google.dagger:dagger:2.0.1'
+    apt 'com.google.dagger:dagger-compiler:2.0.1'
+    provided 'javax.annotation:jsr250-api:1.0'
+
+    // IdlingResource is used in the app under test
+    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.1'
+
+    // For CountingIdlingResource:
+    compile ('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+        exclude group: 'com.android.support'
+    }
+
+    testCompile 'junit:junit:4.12'
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1') {
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+
+    androidTestCompile 'com.google.dagger:dagger:2.0.1'
+    androidTestApt 'com.google.dagger:dagger-compiler:2.0'
+
+    configurations.androidTestCompile {
+        exclude group: 'com.android.support'
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'com.google.dagger:dagger:2.0'
+            force 'com.google.code.gson:gson:2.3'
+        }
+        resolutionStrategy.failOnVersionConflict()
+    }
+
+}

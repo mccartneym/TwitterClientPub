@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TwitterClient</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- Error toasts -->
+    <string name="error_swipe_refresh_failed">Unable to get more Tweets</string>
+</resources>
